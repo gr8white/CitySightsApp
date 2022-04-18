@@ -97,12 +97,6 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                     let result = try decoder.decode(BusinessSearch.self, from: data!)
                     // Assign data to properties
                     DispatchQueue.main.async {
-                        if category == Constants.sightsKey {
-                            self.sights = result.businesses
-                        } else if category == Constants.restaurantKey {
-                            self.restaurants = result.businesses
-                        }
-                        
                         switch category {
                         case Constants.sightsKey:
                             self.sights = result.businesses
