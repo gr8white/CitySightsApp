@@ -12,6 +12,9 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     let locationManager = CLLocationManager()
     
+    @Published var restaurants = [Business]()
+    @Published var sights = [Business]()
+    
     override init() {
         // Super references the parent class (NSObject) and calls its default init
         super.init()
@@ -48,7 +51,7 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             //TODO: Once we have user location, send it to the yelp api
             getBusinesses(category: Constants.restaurantKey, location: userLocation!)
-//            getBusinesses(category: "arts", location: userLocation!)
+            getBusinesses(category: Constants.sightsKey, location: userLocation!)
         }
         
     }
@@ -81,10 +84,35 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             let session = URLSession.shared
             
             // Create data task
-            let dataTask = session.dataTask(with: request) { data, response, error in
+            let dataTask = session.dataTask(with: request) { (data, response, error) in
                 // Check that there isnt an error
                 if error == nil {
                     print(response)
+                }
+                
+                do {
+                    // parse JSON
+                    let decoder = JSONDecoder()
+                    
+                    let result = try decoder.decode(BusinessSearch.self, from: data!)
+                    // Assign data to properties
+                    DispatchQueue.main.async {
+                        if category == Constants.sightsKey {
+                            self.sights = result.businesses
+                        } else if category == Constants.restaurantKey {
+                            self.restaurants = result.businesses
+                        }
+                        
+                        switch category {
+                        case Constants.sightsKey:
+                            self.sights = result.businesses
+                        case Constants.restaurantKey:
+                            self.restaurants = result.businesses
+                        default: break
+                        }
+                    }
+                } catch {
+                    print(error)
                 }
             }
             
