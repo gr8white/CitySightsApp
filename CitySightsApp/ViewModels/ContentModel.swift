@@ -12,6 +12,7 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     let locationManager = CLLocationManager()
     
+    @Published var authorizationState = CLAuthorizationStatus.notDetermined
     @Published var restaurants = [Business]()
     @Published var sights = [Business]()
     
@@ -29,6 +30,8 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - Location manager delegate methods
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        self.authorizationState = locationManager.authorizationStatus
+        
         if locationManager.authorizationStatus == .authorizedAlways ||
             locationManager.authorizationStatus == .authorizedWhenInUse {
             // We have access to location
@@ -50,8 +53,8 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             locationManager.stopUpdatingLocation()
             
             //TODO: Once we have user location, send it to the yelp api
-            getBusinesses(category: Constants.restaurantKey, location: userLocation!)
             getBusinesses(category: Constants.sightsKey, location: userLocation!)
+            getBusinesses(category: Constants.restaurantKey, location: userLocation!)
         }
         
     }
@@ -59,16 +62,12 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - Yelp API Methods
     
     func getBusinesses(category: String, location: CLLocation) {
-        
-        // Create URL
-//        let urlString = "https://api.yelp.com/v3/businesses/search?latitude=\(location.coordinate.latitude)&longitude=\(location.coordinate.longitude)&categories=\(category)&limit=6"
-//        let url = URL(string: urlString)
         var urlComponents = URLComponents(string: Constants.apiUrl)
         
         urlComponents?.queryItems = [
             URLQueryItem(name: "latitude", value: String(location.coordinate.latitude)),
             URLQueryItem(name: "longitude", value: String(location.coordinate.longitude)),
-            URLQueryItem(name: "category", value: category),
+            URLQueryItem(name: "categories", value: category),
             URLQueryItem(name: "limit", value: "6")
         ]
         
@@ -86,27 +85,40 @@ class ContentModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             // Create data task
             let dataTask = session.dataTask(with: request) { (data, response, error) in
                 // Check that there isnt an error
-                if error == nil {
-                    print(response)
-                }
                 
-                do {
-                    // parse JSON
-                    let decoder = JSONDecoder()
-                    
-                    let result = try decoder.decode(BusinessSearch.self, from: data!)
-                    // Assign data to properties
-                    DispatchQueue.main.async {
-                        switch category {
-                        case Constants.sightsKey:
-                            self.sights = result.businesses
-                        case Constants.restaurantKey:
-                            self.restaurants = result.businesses
-                        default: break
+                if error == nil {
+                    do {
+                        // parse JSON
+                        let decoder = JSONDecoder()
+                        
+                        let result = try decoder.decode(BusinessSearch.self, from: data!)
+                        
+                        // Sort business by distance
+                        let businesses = result.businesses.sorted { (b1, b2) -> Bool in
+                            return b1.distance ?? 0 < b2.distance ?? 0
                         }
+                        
+                        // Call get image function on the business
+                        for b in businesses {
+                            b.getImageData()
+                        }
+
+                        DispatchQueue.main.async {
+                            
+                            // Assign results to the appropriate property
+                            
+                            switch category {
+                            case Constants.sightsKey:
+                                self.sights = businesses
+                            case Constants.restaurantKey:
+                                self.restaurants = businesses
+                            default:
+                                break
+                            }
+                        }
+                    } catch {
+                        print(error)
                     }
-                } catch {
-                    print(error)
                 }
             }
             
