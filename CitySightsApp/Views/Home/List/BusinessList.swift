@@ -23,7 +23,11 @@ struct BusinessList: View {
     @ViewBuilder func BusinessSection(title: String, businesses: [Business]) -> some View {
         Section (header: BusinessHeader(title: title)) {
             ForEach(businesses) { business in
-                BusinessRow(business: business)
+                NavigationLink {
+                    BusinessDetail(business: business)
+                } label: {
+                    BusinessRow(business: business)
+                }
             }
         }
     }
@@ -36,12 +40,5 @@ struct BusinessList: View {
             Text(title)
                 .font(.headline)
         }
-    }
-}
-
-struct BusinessList_Previews: PreviewProvider {
-    static var previews: some View {
-        BusinessList()
-            .environmentObject(ContentModel())
     }
 }
