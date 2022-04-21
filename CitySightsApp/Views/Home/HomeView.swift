@@ -28,7 +28,6 @@ struct HomeView: View {
                             } label: {
                                 Text("Switch to map view")
                             }
-
                         }
                         
                         Divider()
@@ -39,11 +38,34 @@ struct HomeView: View {
                     .navigationBarHidden(true)
                 } else {
                     // show map
-                    BusinessMap(selectedBusiness: $selectedBusiness)
-                        .ignoresSafeArea()
-                        .sheet(item: $selectedBusiness) { business in
-                            BusinessDetail(business: business)
+                    ZStack (alignment: .top) {
+                        BusinessMap(selectedBusiness: $selectedBusiness)
+                            .ignoresSafeArea()
+                            .sheet(item: $selectedBusiness) { business in
+                                BusinessDetail(business: business)
                         }
+                        
+                        ZStack {
+                            Rectangle()
+                                .foregroundColor(.white)
+                                .cornerRadius(5)
+                                .frame(height: 48)
+                            
+                            HStack {
+                                Image(systemName: "location")
+                                Text("San Francisco")
+                                Spacer()
+                                Button {
+                                    self.isMapShowing = false
+                                } label: {
+                                    Text("Switch to list view")
+                                }
+                            }
+                            .padding()
+                        }
+                        .padding()
+                    }
+                    .navigationBarHidden(true)
                 }
             }
         } else {
