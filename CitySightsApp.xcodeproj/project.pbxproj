@@ -19,6 +19,7 @@
 		E0B8E6EF280E71290051B0C9 /* BusinessList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B8E6EE280E71290051B0C9 /* BusinessList.swift */; };
 		E0B8E7082810BCDB0051B0C9 /* BusinessRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B8E7072810BCDB0051B0C9 /* BusinessRow.swift */; };
 		E0B8E70B2810C7520051B0C9 /* BusinessDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B8E70A2810C7520051B0C9 /* BusinessDetail.swift */; };
+		E0B8E70E2810DA1C0051B0C9 /* BusinessMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B8E70D2810DA1C0051B0C9 /* BusinessMap.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		E0B8E6EE280E71290051B0C9 /* BusinessList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessList.swift; sourceTree = "<group>"; };
 		E0B8E7072810BCDB0051B0C9 /* BusinessRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessRow.swift; sourceTree = "<group>"; };
 		E0B8E70A2810C7520051B0C9 /* BusinessDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessDetail.swift; sourceTree = "<group>"; };
+		E0B8E70D2810DA1C0051B0C9 /* BusinessMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				E0B8E6EB280E66D70051B0C9 /* HomeView.swift */,
+				E0B8E70C2810D9FE0051B0C9 /* Map */,
 				E0B8E6ED280E711E0051B0C9 /* List */,
 			);
 			path = Home;
@@ -161,6 +164,14 @@
 				E0B8E70A2810C7520051B0C9 /* BusinessDetail.swift */,
 			);
 			path = Detail;
+			sourceTree = "<group>";
+		};
+		E0B8E70C2810D9FE0051B0C9 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				E0B8E70D2810DA1C0051B0C9 /* BusinessMap.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -242,6 +253,7 @@
 				E0B8E70B2810C7520051B0C9 /* BusinessDetail.swift in Sources */,
 				E0B8E6EF280E71290051B0C9 /* BusinessList.swift in Sources */,
 				E0B8E6E3280DC6CE0051B0C9 /* Constants.swift in Sources */,
+				E0B8E70E2810DA1C0051B0C9 /* BusinessMap.swift in Sources */,
 				E0B8E6E7280DCB5B0051B0C9 /* BusinessSearch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
